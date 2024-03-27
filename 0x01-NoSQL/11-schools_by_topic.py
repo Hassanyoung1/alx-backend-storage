@@ -1,15 +1,10 @@
 #!/usr/bin/env python3
 """
-change school topic
+a Python function that returns the list of a specific topic
 """
 import pymongo
 
 
-def update_topics(mongo_collection, name, topics):
-    """
-    update many rows
-    """
-    return mongo_collection.update_many(
-        {"name": name},
-        {"$set": {"topics": topics}}
-    )
+def schools_by_topic(mongo_collection, topic):
+    schools = mongo_collection.find({"topics": topic})
+    return list(schools)
