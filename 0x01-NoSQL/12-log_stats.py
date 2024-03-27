@@ -1,31 +1,27 @@
 #!/usr/bin/env python3
-""" Log stats """
+"""
+script that provides some stats about Nginx logs stored in MongoDB
+"""
 from pymongo import MongoClient
 
-if __name__ == "__main__":
-    """ script that provides some stats about Nginx logs stored in MongoDB: """
-    """ - Database: logs """
-    """ - Collection: nginx """
-    """ Display: """
-    """ - first line: x logs where x is the number of documents in the logs collection """
-    """ - Second line: Methods: """
-    """ - 5 lines with the number of documents with the method """
-    """ - GET method: """
-    """ - POST method: """
-    """ - PUT method: """
-    """ - PATCH method: """
-    """ - DELETE method: """
-    """ - One line with the number of documents with: """
-    """ - method set to GET """
-    """ - path set to /status """
 
-    client = MongoClient('mongodb://127.0.01:27017')
-    logs = client.logs.nginx
-    print(f"{logs.count_documents({})} logs")
+if __name__ == "__main__":
+    client = MongoClient('mongodb://127.0.0.1:27017')
+    nginx_logs = client.logs.nginx
+    # get number of documents in collection
+    docs_num = nginx_logs.count_documents({})
+    get_num = nginx_logs.count_documents({'method': 'GET'})
+    post_num = nginx_logs.count_documents({'method': 'POST'})
+    put_num = nginx_logs.count_documents({'method': 'PUT'})
+    patch_num = nginx_logs.count_documents({'method': 'PATCH'})
+    delete_num = nginx_logs.count_documents({'method': 'DELETE'})
+    get_status = nginx_logs.count_documents({'method': 'GET',
+                                             'path': '/status'})
+    print("{} logs".format(docs_num))
     print("Methods:")
-    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-    for method in methods:
-        count = logs.count_documents({"method": method})
-        print(f"\tmethod {method}: {count}")
-    filter_path = {"method": "GET", "path": "/status"}
-    print(f"{logs.count_documents(filter_path)} status check")
+    print("\tmethod GET: {}".format(get_num))
+    print("\tmethod POST: {}".format(post_num))
+    print("\tmethod PUT: {}".format(put_num))
+    print("\tmethod PATCH: {}".format(patch_num))
+    print("\tmethod DELETE: {}".format(delete_num))
+    print("{} status check".format(get_status))
