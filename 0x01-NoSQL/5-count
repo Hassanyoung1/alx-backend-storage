@@ -1,0 +1,3 @@
+// length of document in a collkection
+
+db.school.count()
