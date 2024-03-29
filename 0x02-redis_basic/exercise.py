@@ -8,6 +8,10 @@ Redis client as a private variable named _redis
 
 import redis
 from uuid import uuid4
+from typing import Union, Callable, Optional
+""""def count_calls(methods: Callable):
+    count += 1
+    return count"""
 
 
 class Cache:
@@ -20,7 +24,7 @@ class Cache:
     """
     A method to store data in Redis
     """
-    def store(self, data: str):
+    def store(self, data: Union[str, bytes, int, float]) -> str:
         key = str(uuid4())
         self._redis.set(key, data)
         return key
